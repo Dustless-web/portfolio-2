@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio — avinash sangisetti (clone)</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* --------------------------------------
+       Design system variables (exact colors)
+       -------------------------------------- */
+    :root{
+      --bg:#FFFFFF; /* primary background */
+      --text:#000000; /* primary text */
+      --muted:#A9A9A9; /* secondary text */
+      --muted-light: #CCCCCC; /* nav inactive text */
+      --accent-dark:#1A1A1A; /* black accent section */
+      --divider:#F0F0F0; /* border/divider */
+      --nav-height:80px;
+      --container-max:1300px; /* between 1200-1400px */
+      --page-padding-vertical:80px; /* default top/bottom for sections */
+      --page-padding-horizontal:48px; /* desktop */
+      --transition:300ms;
+    }
+
+    /* -------------------------------------------------
+       Global reset / base styles
+       ------------------------------------------------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    /* Container ------------------------------------ */
+    .container{
+      max-width:var(--container-max);
+      margin:0 auto;
+      padding:0 var(--page-padding-horizontal);
+      width:100%;
+    }
+
+    /* Navbar --------------------------------------- */
+    header.nav{
+      position:fixed;
+      left:0;right:0;top:0;
+      height:var(--nav-height);
+      display:flex;align-items:center;justify-content:center;
+      z-index:1000;
+      transition:background var(--transition), box-shadow var(--transition);
+      background:transparent;
+      backdrop-filter: blur(4px);
+    }
+    header.nav.scrolled{background:var(--bg); box-shadow:0 4px 16px rgba(0,0,0,0.05)}
+
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+    .logo{
+      display:flex;align-items:center;gap:12px;padding-left:24px;padding-right:16px;cursor:pointer;
+      transform-origin:center;transition:transform 200ms ease;
+    }
+    .logo:hover{transform:scale(1.05)}
+    .logo-mark{width:32px;height:32px;display:inline-block}
+    .logo-text{font-weight:900;letter-spacing:-0.5px}
+
+    nav.links{display:flex;gap:44px;align-items:center;padding-right:24px}
+    nav.links a{font-size:15px;font-weight:500;color:var(--muted);position:relative;padding:8px 0;transition:color var(--transition)}
+    nav.links a:hover{color:var(--text)}
+    nav.links a:hover::after{opacity:1;transform:translateY(0)}
+    nav.links a.active{color:var(--text);font-weight:600}
+    nav.links a::after{
+      content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--text);opacity:0;transform:translateY(6px);transition:all var(--transition) ease-in-out;
+    }
+
+    /* Hero ----------------------------------------- */
+    main.hero{min-height:calc(100vh - var(--nav-height));display:flex;align-items:flex-start;position:relative;padding-top:120px;padding-bottom:40px}
+    .hero .container{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:48px}
+
+    .hero-left h1{font-size:52px;line-height:1.1;font-weight:700;max-width:450px;margin:0}
+    .hero-right p{font-size:18px;line-height:1.7;max-width:500px;margin:0;color:var(--text);letter-spacing:0.5px}
+
+    /* Big branding name */
+    .brand-big{display:block;font-weight:900;font-size:140px;line-height:0.95;margin-top:80px;margin-bottom:-30px;letter-spacing:-3px;max-width:100%;word-break:break-word}
+
+    /* Black dividing strip */
+    .black-strip{height:260px;background:var(--accent-dark);display:flex;align-items:center;justify-content:center;margin-top:0}
+    .loader-star{width:48px;height:48px;animation:spin 1.8s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    /* Sections ------------------------------------- */
+    section{padding:var(--page-padding-vertical) 0}
+    .section-title{font-size:36px;font-weight:700;margin-bottom:28px}
+
+    /* Work page ------------------------------------ */
+    #work .projects{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+    .project-card{display:flex;gap:24px;align-items:flex-start;cursor:pointer}
+    .project-number{font-size:56px;font-weight:700;color:var(--text);min-width:96px}
+    .project-content{flex:1}
+    .project-title{font-size:26px;font-weight:600;color:var(--muted);margin:6px 0;transition:all 300ms}
+    .project-title:hover{color:var(--text);transform:translateX(6px)}
+
+    .project-images{display:flex;gap:16px;margin-top:12px}
+    .project-images img{width:100%;height:160px;object-fit:cover;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:transform 400ms ease-out, box-shadow 400ms ease-out}
+    .project-images img:hover{transform:scale(1.02);box-shadow:0 8px 32px rgba(0,0,0,0.12)}
+
+    .project-meta{margin-top:10px;font-size:13px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+
+    /* Project sidebar */
+    .work-sidebar{width:230px;position:sticky;top:120px;height:calc(100vh - 120px)}
+
+    /* Project detail */
+    .project-hero{max-width:1200px;margin:0 auto}
+    .project-hero img{width:100%;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.15)}
+
+    .meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:40px;border-bottom:1px solid var(--divider);padding-bottom:32px}
+    .meta-label{font-size:12px;color:var(--muted);letter-spacing:1px}
+    .meta-value{font-size:16px;font-weight:600;color:var(--text);margin-top:6px}
+
+    .project-desc{max-width:800px;margin-top:40px;font-size:16px;line-height:1.7}
+
+    /* Gallery */
+    .gallery{margin-top:60px}
+    .gallery-item{margin-bottom:100px}
+    .gallery-item img{width:100%;border-radius:10px}
+
+    .gallery-counter{position:fixed;left:24px;bottom:24px;background:transparent;padding:8px;font-size:14px;color:var(--text);opacity:0.6}
+
+    /* CTA */
+    .cta{background:#F9F9F9;border-top:1px solid var(--divider;padding:0)}
+    .cta-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;max-width:var(--container-max);margin:0 auto;padding:60px var(--page-padding-horizontal)}
+    .cta-title{font-size:28px;font-weight:600}
+    .cta-text{color:#666666}
+    .btn{background:var(--text);color:var(--bg);padding:12px 36px;border-radius:6px;font-weight:600;cursor:pointer;border:none}
+    .btn:hover{transform:scale(1.03)}
+
+    /* Footer */
+    footer{padding:40px 0;color:var(--muted);border-top:1px solid var(--divider)}
+
+    /* Responsive ---------------------------------- */
+    @media (max-width:1199px){
+      :root{--page-padding-horizontal:32px}
+      .hero .container{grid-template-columns:1fr;}
+      .brand-big{font-size:110px}
+      .container{padding:0 32px}
+      .work-sidebar{display:none}
+      .meta-grid{grid-template-columns:repeat(2,1fr)}
+      .project-number{font-size:48px}
+    }
+    @media (max-width:767px){
+      :root{--page-padding-horizontal:16px;--page-padding-vertical:60px}
+      header.nav{height:64px}
+      .logo{padding-left:16px}
+      nav.links{gap:20px;padding-right:16px}
+      .hero-left h1{font-size:36px}
+      .brand-big{font-size:72px;margin-top:40px}
+      .hero{padding-top:96px}
+      #work .projects{grid-template-columns:1fr}
+      .meta-grid{grid-template-columns:1fr}
+      .project-images img{height:140px}
+      .gallery-counter{left:12px;bottom:12px;font-size:13px}
+    }
+
+    /* Accessibility focus states */
+    a:focus{outline:2px dashed rgba(0,0,0,0.12);outline-offset:4px}
+
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav" id="site-nav">
+    <div class="container nav-inner">
+      <div style="display:flex;align-items:center;gap:12px">
+        <a href="#/" class="logo" id="logo-link" aria-label="Home">
+          <!-- Custom star/asterisk SVG -->
+          <svg class="logo-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2L13.09 8.26L19.64 8.91L14.82 12.97L16.18 19.39L12 15.9L7.82 19.39L9.18 12.97L4.36 8.91L10.91 8.26L12 2Z" fill="#000000"/>
+          </svg>
+          <span class="logo-text">avinash sangisetti</span>
+        </a>
+      </div>
+
+      <nav class="links" role="navigation" aria-label="Primary">
+        <a href="#/work" data-route="/work">WORK</a>
+        <a href="#/blog" data-route="/blog">BLOG</a>
+        <a href="#/about" data-route="/about">ABOUT</a>
+        <a href="mailto:email@example.com" style="font-weight:600">CONTACT</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN: simple SPA with hash-based routing. Sections are present and toggled by JS. -->
+  <main id="app-root">
+
+    <!-- HOME / HERO -->
+    <section id="hero" data-route="/" class="hero">
+      <div class="container">
+        <div class="hero-left">
+          <h1>Product Design, AI Engineering, and Intelligent Systems</h1>
+        </div>
+        <div class="hero-right">
+          <p>I design human-centered products and engineer intelligent systems. Based in Bengaluru, India, I’m driven by curiosity and clarity, working at the intersection of user experience, data, and scalable AI to build tools that feel intuitive and think at scale.</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="brand-big">avinash sangisetti</div>
+      </div>
+
+      <div class="black-strip" aria-hidden="true">
+        <svg class="loader-star" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L13.09 8.26L19.64 8.91L14.82 12.97L16.18 19.39L12 15.9L7.82 19.39L9.18 12.97L4.36 8.91L10.91 8.26L12 2Z" fill="#FFFFFF"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- WORK (simulated page) -->
+    <section id="work" data-route="/work" style="display:none;padding-top:120px">
+      <div class="container">
+        <h2 class="section-title">Selected Work</h2>
+        <div style="display:flex;gap:32px;align-items:flex-start">
+          <div style="flex:1">
+            <div class="projects">
+
+              <!-- Project 01 -->
+              <article class="project-card" data-slug="project-01" tabindex="0">
+                <div class="project-number">01</div>
+                <div class="project-content">
+                  <div class="project-title">Interactive Case Study — Brand Rebuild</div>
+                  <div class="project-images">
+                    <img src="https://picsum.photos/seed/p1a/600/400" alt="project image 1">
+                    <img src="https://picsum.photos/seed/p1b/600/400" alt="project image 2">
+                    <img src="https://picsum.photos/seed/p1c/600/800" alt="project image 3">
+                  </div>
+                  <div class="project-meta">Nuxt 4 • Design • 2025</div>
+                </div>
+              </article>
+
+              <!-- Project 02 -->
+              <article class="project-card" data-slug="project-02" tabindex="0">
+                <div class="project-number">02</div>
+                <div class="project-content">
+                  <div class="project-title">E‑commerce Experience — Motion UI</div>
+                  <div class="project-images">
+                    <img src="https://picsum.photos/seed/p2a/600/500" alt="project image 1">
+                    <img src="https://picsum.photos/seed/p2b/600/400" alt="project image 2">
+                    <img src="https://picsum.photos/seed/p2c/600/800" alt="project image 3">
+                  </div>
+                  <div class="project-meta">React • Tailwind CSS • 2024</div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+          <aside class="work-sidebar">
+            <div style="font-weight:700;font-size:20px;margin-bottom:12px">Project Details</div>
+            <div style="color:var(--muted);font-size:14px">Select a project to view details. Each project page has a description, full gallery, and meta.</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT DETAIL (template) -->
+    <section id="project-detail" data-route="/work/project" style="display:none;padding-top:120px">
+      <div class="container project-hero">
+        <h1 class="project-title-large" style="font-size:72px;font-weight:900;line-height:0.95;margin-bottom:40px">Project Name — Case Study</h1>
+        <img src="https://picsum.photos/seed/hero/1200/600" alt="Project hero" />
+
+        <div class="meta-grid">
+          <div>
+            <div class="meta-label">PURPOSE</div>
+            <div class="meta-value">Fullstack Development</div>
+          </div>
+          <div>
+            <div class="meta-label">TECH STACK</div>
+            <div class="meta-value">Nuxt 4, Vue 3, Tailwind CSS, PostgreSQL</div>
+          </div>
+          <div>
+            <div class="meta-label">YEAR</div>
+            <div class="meta-value">2025</div>
+          </div>
+          <div>
+            <div class="meta-label">ROLE</div>
+            <div class="meta-value">Lead Developer</div>
+          </div>
+        </div>
+
+        <div class="project-desc">This is a concise 2–3 sentence overview explaining the problem, approach, and outcome. The text uses 16–18px with 1.7 line height for comfortable reading. The layout keeps plenty of white space to match the minimalist aesthetic.</div>
+
+        <div class="gallery">
+          <div class="gallery-item"><img src="https://picsum.photos/seed/g1/1200/700" alt="gallery image 1"></div>
+          <div class="gallery-item"><img src="https://picsum.photos/seed/g2/1200/700" alt="gallery image 2"></div>
+          <div class="gallery-item"><img src="https://picsum.photos/seed/g3/1200/700" alt="gallery image 3"></div>
+        </div>
+
+        <div class="gallery-counter" id="galleryCounter">0 / 3</div>
+
+        <!-- CTA -->
+        <div style="margin-top:120px;background:#F9F9F9;padding:60px;border-top:1px solid var(--divider)">
+          <div style="max-width:var(--container-max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <div class="cta-title">Let's Collaborate</div>
+              <div class="cta-text">Interested in working together? I typically respond within a few business days. Tell me about your project and timeline.</div>
+            </div>
+            <div>
+              <a class="btn" href="mailto:email@example.com">Contact</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:40px;text-align:left">
+          <a href="#/work" style="color:var(--muted);font-size:15px">← Back to Work</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BLOG (skeleton) -->
+    <section id="blog" data-route="/blog" style="display:none;padding-top:120px">
+      <div class="container">
+        <h1 style="font-size:56px;font-weight:900;margin-bottom:40px">Blog</h1>
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:40px">
+          <div>
+            <article style="margin-bottom:48px">
+              <h3 style="font-size:22px;margin:6px 0">Design Systems for Startups</h3>
+              <p style="color:var(--muted);font-size:14px">Jan 7, 2026 — A short excerpt that explains the post topic and encourages the reader to click through.</p>
+            </article>
+            <article style="margin-bottom:48px">
+              <h3 style="font-size:22px;margin:6px 0">Micro-Interactions that Delight</h3>
+              <p style="color:var(--muted);font-size:14px">Dec 12, 2025 — Quick tips on motion and timing for user interfaces.</p>
+            </article>
+          </div>
+          <aside style="border-left:1px solid var(--divider);padding-left:24px">
+            <div style="font-weight:700;margin-bottom:12px">Categories</div>
+            <div style="display:flex;flex-direction:column;gap:8px"><button style="border:1px solid #000;padding:8px 12px;background:transparent;cursor:pointer">All</button></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" data-route="/about" style="display:none;padding-top:120px">
+      <div class="container">
+        <h1 style="font-size:42px;font-weight:700;margin-bottom:18px">About</h1>
+        <p style="max-width:720px">I design and build digital products — from brand identities and websites to complex frontend experiences. My approach blends clean visual language, thoughtful interaction design, and pragmatic engineering to ship work that scales.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="container" style="border-top:1px solid var(--divider);margin-top:60px;padding-top:36px;padding-bottom:60px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-weight:700">avinash sangisetti</div>
+      <div style="color:var(--muted)">© <span id="year"></span> • Built with care</div>
+    </div>
+  </footer>
+
+  <script>
+    // Basic SPA routing (hash-based). Maps route -> section with [data-route]
+    (function(){
+      const sections = document.querySelectorAll('[data-route]');
+      const navLinks = document.querySelectorAll('nav.links a[data-route]');
+      function showRoute(route){
+        sections.forEach(s=>s.style.display = (s.getAttribute('data-route')===route ? '' : 'none'));
+        navLinks.forEach(a=> a.classList.toggle('active', a.getAttribute('data-route')===route));
+        // set focus to top for accessibility
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      function parseHash(){
+        const hash = location.hash.replace('#','') || '/';
+        // support nested project url like /work/project-01
+        const parts = hash.split('/').filter(Boolean);
+        if(parts.length===0) return '/';
+        if(parts[0]==='work' && parts[1]) return '/work/project';
+        return '/' + parts[0];
+      }
+
+      window.addEventListener('hashchange', ()=> showRoute(parseHash()));
+      // initial
+      if(!location.hash) location.hash = '#/';
+      showRoute(parseHash());
+
+      // Project card click -> open detail
+      document.querySelectorAll('.project-card').forEach(card=>{
+        card.addEventListener('click', ()=>{
+          const slug = card.dataset.slug;
+          // set a simple state (we don't fetch remote data in this static clone)
+          location.hash = '#/work/' + slug;
+        });
+        card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') card.click(); })
+      });
+
+      // Update year in footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Navbar background on scroll
+      const nav = document.getElementById('site-nav');
+      window.addEventListener('scroll', ()=>{
+        if(window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+      });
+
+      // Gallery counter (updates based on which gallery item is visible)
+      const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+      const counter = document.getElementById('galleryCounter');
+      if(galleryItems.length && counter){
+        const obs = new IntersectionObserver((entries)=>{
+          entries.forEach(ent=>{
+            if(ent.isIntersecting){
+              const idx = galleryItems.indexOf(ent.target)+1;
+              counter.textContent = idx + ' / ' + galleryItems.length;
+              counter.style.opacity = '1';
+              setTimeout(()=>counter.style.opacity='0.6',700);
+            }
+          })
+        },{threshold:0.6});
+        galleryItems.forEach(i=>obs.observe(i));
+        // initial value
+        counter.textContent = '1 / ' + galleryItems.length;
+      }
+
+      // Make nav links update the hash when clicked
+      navLinks.forEach(a=>a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const route = a.getAttribute('data-route');
+        location.hash = '#'+route;
+      }));
+
+    })();
+  </script>
+</body>
+</html>
